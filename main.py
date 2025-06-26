@@ -185,17 +185,74 @@ class CryptoSimApp:
                         fg="white" if name == tab_name else self.gray_text_color)
 
             if tab_name == "Homepage":
-                # Greeting
-                greeting = tk.Label(content, text=f"Welcome, {username}", font=("Helvetica", 18, "bold"), bg="#f3f3f3", anchor="w")
-                greeting.pack(padx=80, pady=(30, 10), anchor="w")
+
+
+               # Greeting Box Frame
+                greeting_frame = tk.Frame(content, bg="white", bd=1, relief="groove", width=500)
+                greeting_frame.pack(padx=80, pady=(30, 10), anchor="w")
+                greeting_frame.pack_propagate(False)
+
+
+                greeting_label = tk.Label(greeting_frame, text=f"Welcome, {username}", font=("Helvetica", 18, "bold"), bg="white", anchor="w", padx=10, pady=10)
+                greeting_label.pack(fill="x")
+
 
                 # Top Container Frame
                 top_frame = tk.Frame(content, bg="#f3f3f3")
-                top_frame.pack(padx=80, fill="x")
+                top_frame.pack(padx=80, fill="both", expand=True)
 
-                # Balance Box
-                balance_frame = tk.Frame(top_frame, bg="white", bd=1, relief="groove")
-                balance_frame.pack(side="left", fill="y", padx=(0, 20))
+                left_column = tk.Frame(top_frame, bg="#f3f3f3")
+                left_column.pack(side="left", fill="both", expand=True)
+
+
+                # Activity Box Frame
+                activity_frame = tk.Frame(top_frame, bg="white", bd=1, relief="groove", width=250)
+                activity_frame.pack(side="right", fill="y", padx=(20, 0))
+                activity_frame.pack_propagate(False)
+
+
+                # Activity Header with "See All"
+                activity_header = tk.Frame(activity_frame, bg="white")
+                activity_header.pack(fill="x", pady=(10, 5), padx=10)
+
+                tk.Label(activity_header, text="Activity", font=("Helvetica", 12, "bold"), bg="white").pack(side="left")
+                see_all_label = tk.Label(activity_header, text="See All", font=("Helvetica", 10), fg="blue", bg="white", cursor="hand2")
+                see_all_label.pack(side="right")
+                see_all_label.bind("<Button-1>", lambda e: switch_tab("Profile"))
+
+                # Activity List
+                activities = [
+                    ("Bitcoin", "Sold", "-0.0000056 BTC", "green"),
+                    ("Ethereum", "Bought", "+0.0000056 BTC", "red"),
+                    ("Dogecoin", "Sold", "-0.0000056 BTC", "green"),
+                    ("Kusama", "Bought", "+0.0000056 BTC", "red"),
+                    ("Litecoin", "Sold", "-0.0000056 BTC", "green")
+                ]
+
+                for coin, action, amount, arrow_color in activities:
+                    row = tk.Frame(activity_frame, bg="white")
+                    row.pack(fill="x", padx=10, pady=5)
+
+                    icon = tk.Label(row, text="🪙", font=("Helvetica", 16), bg="white")  # Replace with image if you want
+                    icon.pack(side="left")
+
+                    action_label = tk.Label(row, text=f"{action} {coin}", font=("Helvetica", 10), bg="white")
+                    action_label.pack(side="left", padx=5)
+
+                    amount_label = tk.Label(row, text=amount, font=("Helvetica", 10), fg=arrow_color, bg="white")
+                    amount_label.pack(side="right")
+
+
+
+                
+
+                                # Row to hold balance and action side by side
+                balance_action_row = tk.Frame(left_column, bg="#f3f3f3")
+                balance_action_row.pack(fill="x", pady=(0, 10))
+
+                # Balance Box (left half)
+                balance_frame = tk.Frame(balance_action_row, bg="white", bd=1, relief="groove")
+                balance_frame.pack(side="left", expand=True, fill="both", padx=(0, 5))
 
                 card_icon = tk.Label(balance_frame, text="💳", font=("Helvetica", 32), bg="white")
                 card_icon.grid(row=0, column=0, rowspan=2, padx=10, pady=10)
@@ -207,9 +264,9 @@ class CryptoSimApp:
                 deposit_btn = tk.Button(balance_frame, text="+ Deposit", bg="black", fg="white", font=("Helvetica", 10), relief="flat")
                 deposit_btn.grid(row=0, column=2, sticky="e", padx=10, pady=10)
 
-                # Action Buttons Box
-                action_frame = tk.Frame(top_frame, bg="white", bd=1, relief="groove")
-                action_frame.pack(side="left", fill="both", expand=True)
+                # Action Buttons Box (right half)
+                action_frame = tk.Frame(balance_action_row, bg="white", bd=1, relief="groove")
+                action_frame.pack(side="left", expand=True, fill="both", padx=(5, 0))
 
                 def action_button(parent, symbol, text, command):
                     btn = tk.Button(parent, text=symbol, font=("Helvetica", 16, "bold"), bg=self.highlight_color, fg="white",
@@ -229,10 +286,71 @@ class CryptoSimApp:
                     col.pack(side="left", expand=True)
                     action_button(col, symbol, label, cmd)
 
-        if self.logo_img:
-            logo_label = tk.Label(sidebar, image=self.logo_img, bg=self.white_color)
-            logo_label.image = self.logo_img
-            logo_label.pack(pady=10)
+                # Asset Holdings Box
+                asset_frame = tk.Frame(left_column, bg="white", bd=1, relief="groove")
+                asset_frame.pack(fill="x")
+
+                # Header row with "Assets", "Value", "Amount", and "See All"
+                header = tk.Frame(asset_frame, bg="white")
+                header.pack(fill="x", pady=(10, 5), padx=10)
+
+                tk.Label(header, text="Assets", font=("Helvetica", 12, "bold"), bg="white").pack(side="left")
+
+                tk.Label(header, text="value", font=("Helvetica", 10), fg="gray", bg="white").pack(side="left", padx=80)
+                tk.Label(header, text="amount", font=("Helvetica", 10), fg="gray", bg="white").pack(side="left", padx=80)
+
+                see_all_btn = tk.Button(header, text="See All", font=("Helvetica", 10), fg="blue", bg="white", bd=0, cursor="hand2",
+                                        command=lambda: switch_tab("Profile"))
+                see_all_btn.pack(side="right")
+
+                # Asset list
+                assets = [
+                    {"name": "Bitcoin", "symbol": "BTC", "value": "$2351.24 AUD", "amount": "0.542", "icon": "bitcoin.png"},
+                    {"name": "Ethereum", "symbol": "ETH", "value": "$2351.24 AUD", "amount": "0.542", "icon": "ethereum.png"},
+                    {"name": "DogeCoin", "symbol": "DOG", "value": "$2351.24 AUD", "amount": "0.542", "icon": "dogecoin.png"},
+                ]
+
+                for asset in assets:
+                    row = tk.Frame(asset_frame, bg="white")
+                    row.pack(fill="x", padx=10, pady=5)
+
+                    # Replace with your actual image paths
+                    icon_path = f"C:/Users/emmau/vscode/CRYPTOSIM/images/{asset['icon']}"
+                    icon = self.load_image(icon_path, (30, 30))
+
+                    if icon:
+                        icon_label = tk.Label(row, image=icon, bg="white")
+                        icon_label.image = icon
+                        icon_label.pack(side="left", padx=(5, 10))
+
+                    info = tk.Frame(row, bg="white")
+                    info.pack(side="left")
+
+                    tk.Label(info, text=asset["name"], font=("Helvetica", 11, "bold"), bg="white").pack(anchor="w")
+                    tk.Label(info, text=asset["symbol"], font=("Helvetica", 9), fg="gray", bg="white").pack(anchor="w")
+
+                    tk.Label(row, text=asset["value"], font=("Helvetica", 11, "bold"), bg="white").pack(side="left", padx=60)
+                    tk.Label(row, text=asset["amount"], font=("Helvetica", 11), bg="white").pack(side="left", padx=60)
+
+                    def show_context_menu(event, asset_name=asset["name"]):
+                        menu = tk.Menu(self.root, tearoff=0, bg="white", fg="black", font=("Helvetica", 10))
+                        menu.add_command(label="Buy")
+                        menu.add_command(label="Sell")
+                        menu.add_command(label="Send")
+                        menu.add_command(label="Delete")
+                        try:
+                            menu.tk_popup(event.x_root, event.y_root)
+                        finally:
+                            menu.grab_release()
+
+                    more_btn = tk.Button(row, text="⋯", font=("Helvetica", 14), bg="white", bd=0, cursor="hand2")
+                    more_btn.pack(side="right", padx=5)
+                    more_btn.bind("<Button-1>", show_context_menu)
+        
+
+
+
+
 
         tabs = ["Homepage", "Buy/Sell", "Leaderboard", "Profile", "Settings"]
         for tab in tabs:
@@ -241,6 +359,11 @@ class CryptoSimApp:
                             command=lambda name=tab: switch_tab(name))
             btn.pack(fill="x", pady=5, padx=10)
             tab_buttons[tab] = btn
+
+            
+
+
+
 
         switch_tab("Homepage")
 
