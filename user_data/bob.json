@@ -1,0 +1,12 @@
+{
+  "username": "bob",
+  "password": "password",
+  "balance": 44444.0,
+  "holdings": {},
+  "activity": [
+    {
+      "desc": "Deposited $44444.00 USD",
+      "color": "green"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "username": "a",
+  "password": "a",
+  "balance": 1109912395.0000272,
+  "holdings": {
+    "BTC": 8.358997
+  },
+  "activity": [
+    {
+      "desc": "Sold 1.000000 BTC for $1073\u2026",
+      "color": "green"
+    },
+    {
+      "desc": "Sold 1.000000 BTC for $0.00\u2026",
+      "color": "green"
+    },
+    {
+      "desc": "Bought 10.356900 BTC for $1\u2026",
+      "color": "red"
+    },
+    {
+      "desc": "Bought 0.001035 BTC for $11\u2026",
+      "color": "red"
+    },
+    {
+      "desc": "Sold 1.000000 BTC for $0.00\u2026",
+      "color": "green"
+    }
+  ]
+}
